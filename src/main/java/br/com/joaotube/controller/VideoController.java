@@ -48,12 +48,7 @@ public class VideoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> excluir(@PathVariable Long id) {
-        try {
-            videoService.excluir(id);
-            return ResponseEntity.ok("Vídeo id= " + id + " excluído com sucesso");
-        } catch (VideoNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-
+        videoService.excluir(id);
+        return ResponseEntity.ok("Vídeo id " + id + " excluído com sucesso");
     }
 }
