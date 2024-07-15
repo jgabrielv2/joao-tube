@@ -2,6 +2,7 @@ package br.com.joaotube.service;
 
 import br.com.joaotube.dto.CategoriaInputDto;
 import br.com.joaotube.dto.CategoriaResponseDto;
+import br.com.joaotube.infra.exception.CategoriaNotFoundException;
 import br.com.joaotube.model.Categoria;
 import br.com.joaotube.repository.CategoriaRepository;
 import jakarta.transaction.Transactional;
@@ -57,5 +58,4 @@ public class CategoriaService {
         categoriaRepository.delete(categoria);
     }
 
-}
 }

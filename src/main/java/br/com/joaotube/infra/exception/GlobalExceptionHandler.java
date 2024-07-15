@@ -15,21 +15,26 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(VideoNotFoundException.class)
-    public ResponseEntity<String> tratarErroVideoNaoEncontrado(VideoNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<String> tratarErroVideoNaoEncontrado(VideoNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(CategoriaNotFoundException.class)
+    public ResponseEntity<String> tratarErroCategoriaNaoEncontrada(CategoriaNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<?> tratarViolacaoRestricaoCampo(ConstraintViolationException ex) {
-        List<DadosErroValidacao> erros = ex.getConstraintViolations().stream().map(violation -> new DadosErroValidacao(
+    public ResponseEntity<?> tratarViolacaoRestricaoCampo(ConstraintViolationException e) {
+        List<DadosErroValidacao> erros = e.getConstraintViolations().stream().map(violation -> new DadosErroValidacao(
                 violation.getPropertyPath().toString(),
                 violation.getMessage())).toList();
         return ResponseEntity.badRequest().body(erros);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<DadosErroValidacao>> tratarErro400(MethodArgumentNotValidException ex) {
-        List<FieldError> erros = ex.getFieldErrors();
+    public ResponseEntity<List<DadosErroValidacao>> tratarErro400(MethodArgumentNotValidException e) {
+        List<FieldError> erros = e.getFieldErrors();
         return ResponseEntity.badRequest().body(erros.stream().map(DadosErroValidacao::new).toList());
     }
 
