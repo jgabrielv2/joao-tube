@@ -3,6 +3,9 @@ package br.com.joaotube.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,8 +20,18 @@ public class Categoria {
     private String titulo;
 
     @NotBlank(message = "cor não pode estar em branco")
-
     private String cor;
+
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Video> videos = new ArrayList<>();
+
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
 
     public Long getId() {
         return id;
@@ -51,4 +64,6 @@ public class Categoria {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+
 }

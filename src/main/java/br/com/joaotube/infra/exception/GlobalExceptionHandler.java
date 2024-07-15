@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.List;
 
@@ -15,17 +16,26 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(VideoNotFoundException.class)
-    public ResponseEntity<String> tratarErroVideoNaoEncontrado(VideoNotFoundException e) {
+    public ResponseEntity<String> handleVideoNotFound(VideoNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
     @ExceptionHandler(CategoriaNotFoundException.class)
-    public ResponseEntity<String> tratarErroCategoriaNaoEncontrada(CategoriaNotFoundException e) {
+    public ResponseEntity<String> handleCategoriaNotFound(CategoriaNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<DadosArgumentTypeMismath> handleArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
+        String field = e.getName();
+        String rejectedValue = String.valueOf(e.getValue()); // Safe conversion to String
+        String message = String.format("O valor '%s' não é válido para o campo '%s'", rejectedValue, field);
+        DadosArgumentTypeMismath error = new DadosArgumentTypeMismath(field, rejectedValue, message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<?> tratarViolacaoRestricaoCampo(ConstraintViolationException e) {
+    public ResponseEntity<?> handleContraintViolation(ConstraintViolationException e) {
         List<DadosErroValidacao> erros = e.getConstraintViolations().stream().map(violation -> new DadosErroValidacao(
                 violation.getPropertyPath().toString(),
                 violation.getMessage())).toList();
@@ -33,7 +43,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<DadosErroValidacao>> tratarErro400(MethodArgumentNotValidException e) {
+    public ResponseEntity<List<DadosErroValidacao>> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         List<FieldError> erros = e.getFieldErrors();
         return ResponseEntity.badRequest().body(erros.stream().map(DadosErroValidacao::new).toList());
     }

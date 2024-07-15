@@ -3,10 +3,10 @@ package br.com.joaotube.controller;
 
 import br.com.joaotube.dto.CategoriaInputDto;
 import br.com.joaotube.dto.CategoriaResponseDto;
-import br.com.joaotube.infra.exception.CategoriaNotFoundException;
+import br.com.joaotube.dto.VideoResponseDto;
 import br.com.joaotube.service.CategoriaService;
+import br.com.joaotube.service.VideoService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,9 +19,11 @@ import java.util.List;
 public class CategoriaController {
 
     private final CategoriaService categoriaService;
+    private final VideoService videoService;
 
-    public CategoriaController(CategoriaService categoriaService) {
+    public CategoriaController(CategoriaService categoriaService, VideoService videoService) {
         this.categoriaService = categoriaService;
+        this.videoService = videoService;
     }
 
     @PostMapping
@@ -42,6 +44,10 @@ public class CategoriaController {
         return ResponseEntity.ok(categoriaService.exibirTodos());
     }
 
+    @GetMapping("/{categoriaId}/videos")
+    public ResponseEntity<List<VideoResponseDto>> exibirVideosPorCategoria(@PathVariable Long categoriaId) {
+        return ResponseEntity.ok(videoService.exibirPorIdCategoria(categoriaId));
+    }
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaResponseDto> editar(@PathVariable Long id, @RequestBody CategoriaInputDto input) {
         return ResponseEntity.ok(categoriaService.editar(id, input));
