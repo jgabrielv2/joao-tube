@@ -54,8 +54,14 @@ public class VideoService {
     }
 
     public List<VideoResponseDto> exibirPorIdCategoria(Long idCategoria) {
-        return videoRepository.findByCategoria_Id(idCategoria).stream().map
-                (v -> new VideoResponseDto(v.getId(), v.getCategoria().getId(),
+        return videoRepository.findByCategoria_Id(idCategoria).stream().map(
+                v -> new VideoResponseDto(v.getId(), v.getCategoria().getId(),
+                        v.getTitulo(), v.getDescricao(), v.getUrl())).toList();
+    }
+
+    public List<VideoResponseDto> buscarPorTituloContendo(String titulo){
+        return videoRepository.findByTituloContainsIgnoreCase(titulo).stream().map(
+                v -> new VideoResponseDto(v.getId(), v.getCategoria().getId(),
                         v.getTitulo(), v.getDescricao(), v.getUrl())).toList();
     }
 

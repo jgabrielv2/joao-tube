@@ -2,10 +2,8 @@ package br.com.joaotube.controller;
 
 import br.com.joaotube.dto.VideoInputDto;
 import br.com.joaotube.dto.VideoResponseDto;
-import br.com.joaotube.infra.exception.VideoNotFoundException;
 import br.com.joaotube.service.VideoService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -34,6 +32,13 @@ public class VideoController {
     @GetMapping("/{id}")
     public ResponseEntity<VideoResponseDto> exibirPorId(@PathVariable Long id) {
         return ResponseEntity.ok(videoService.exibirPorId(id));
+    }
+
+
+    @GetMapping("/")
+    public ResponseEntity<List<VideoResponseDto>> buscarPorTituloContendo(
+            @RequestParam String search) {
+            return ResponseEntity.ok(videoService.buscarPorTituloContendo(search));
     }
 
     @GetMapping
