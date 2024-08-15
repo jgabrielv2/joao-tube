@@ -4,12 +4,13 @@ import br.com.joaotube.dto.VideoInputDto;
 import br.com.joaotube.dto.VideoResponseDto;
 import br.com.joaotube.service.VideoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/videos")
@@ -34,16 +35,20 @@ public class VideoController {
         return ResponseEntity.ok(videoService.exibirPorId(id));
     }
 
+    @GetMapping("/categoria/{idCategoria}")
+    public ResponseEntity<Page<VideoResponseDto>> buscarPorIdCategoria(@PathVariable Long idCategoria, Pageable pageable){
+        return ResponseEntity.ok(videoService.exibirPorIdCategoria(idCategoria, pageable));
+    }
 
     @GetMapping("/")
-    public ResponseEntity<List<VideoResponseDto>> buscarPorTituloContendo(
-            @RequestParam String search) {
-            return ResponseEntity.ok(videoService.buscarPorTituloContendo(search));
+    public ResponseEntity<Page<VideoResponseDto>> buscarPorTituloContendo(
+            @RequestParam String search, Pageable pageable) {
+            return ResponseEntity.ok(videoService.buscarPorTituloContendo(search, pageable));
     }
 
     @GetMapping
-    public ResponseEntity<List<VideoResponseDto>> exibirTodos() {
-        return ResponseEntity.ok(videoService.exibirTodos());
+    public ResponseEntity<Page<VideoResponseDto>> exibirTodos(Pageable pageable) {
+        return ResponseEntity.ok(videoService.exibirTodos(pageable));
     }
 
     @PutMapping("/{id}")

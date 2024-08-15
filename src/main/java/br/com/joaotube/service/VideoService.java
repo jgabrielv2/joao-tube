@@ -9,6 +9,8 @@ import br.com.joaotube.model.Video;
 import br.com.joaotube.repository.CategoriaRepository;
 import br.com.joaotube.repository.VideoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,11 +43,10 @@ public class VideoService {
         return new VideoResponseDto(v.getId(), v.getCategoria().getId(), v.getTitulo(), v.getDescricao(), v.getUrl());
     }
 
-    public List<VideoResponseDto> exibirTodos() {
-        return videoRepository.findAll().stream().map(
+    public Page<VideoResponseDto> exibirTodos(Pageable pageable) {
+        return videoRepository.findAll(pageable).map(
                 v -> new VideoResponseDto(v.getId(), v.getCategoria().getId(),
-                        v.getTitulo(), v.getDescricao(), v.getUrl())).toList();
-
+                        v.getTitulo(), v.getDescricao(), v.getUrl()));
     }
 
     public VideoResponseDto exibirPorId(Long id) {
@@ -53,16 +54,16 @@ public class VideoService {
         return new VideoResponseDto(v.getId(), v.getCategoria().getId(), v.getTitulo(), v.getDescricao(), v.getUrl());
     }
 
-    public List<VideoResponseDto> exibirPorIdCategoria(Long idCategoria) {
-        return videoRepository.findByCategoria_Id(idCategoria).stream().map(
+    public Page<VideoResponseDto> exibirPorIdCategoria(Long idCategoria, Pageable pageable) {
+        return videoRepository.findByCategoria_Id(idCategoria, pageable).map(
                 v -> new VideoResponseDto(v.getId(), v.getCategoria().getId(),
-                        v.getTitulo(), v.getDescricao(), v.getUrl())).toList();
+                        v.getTitulo(), v.getDescricao(), v.getUrl()));
     }
 
-    public List<VideoResponseDto> buscarPorTituloContendo(String titulo){
-        return videoRepository.findByTituloContainsIgnoreCase(titulo).stream().map(
+    public Page<VideoResponseDto> buscarPorTituloContendo(String titulo, Pageable pageable){
+        return videoRepository.findByTituloContainsIgnoreCase(titulo, pageable).map(
                 v -> new VideoResponseDto(v.getId(), v.getCategoria().getId(),
-                        v.getTitulo(), v.getDescricao(), v.getUrl())).toList();
+                        v.getTitulo(), v.getDescricao(), v.getUrl()));
     }
 
     @Transactional
