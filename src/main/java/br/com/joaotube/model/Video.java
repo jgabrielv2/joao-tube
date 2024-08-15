@@ -13,13 +13,13 @@ public class Video {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "título não pode estar em branco")
     private String titulo;
 
-    @NotBlank
+    @NotBlank(message = "descrição não pode estar em branco")
     private String descricao;
 
-    @NotBlank
+    @NotBlank(message = "url não pode estar em branco")
     private String url;
 
     public Long getId() {
