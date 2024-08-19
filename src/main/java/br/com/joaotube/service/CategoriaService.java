@@ -6,6 +6,8 @@ import br.com.joaotube.infra.exception.CategoriaNotFoundException;
 import br.com.joaotube.model.Categoria;
 import br.com.joaotube.repository.CategoriaRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,9 +30,9 @@ public class CategoriaService {
         return new CategoriaResponseDto(c.getId(), c.getTitulo(), c.getCor());
     }
 
-    public List<CategoriaResponseDto> exibirTodos() {
-        return categoriaRepository.findAll().stream().map(
-                c -> new CategoriaResponseDto(c.getId(), c.getTitulo(), c.getCor())).toList();
+    public Page<CategoriaResponseDto> exibirTodos(Pageable pageable) {
+        return categoriaRepository.findAll(pageable).map(
+                c -> new CategoriaResponseDto(c.getId(), c.getTitulo(), c.getCor()));
 
     }
 

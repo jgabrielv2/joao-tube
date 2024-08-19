@@ -7,12 +7,14 @@ import br.com.joaotube.dto.VideoResponseDto;
 import br.com.joaotube.service.CategoriaService;
 import br.com.joaotube.service.VideoService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/categorias")
@@ -40,14 +42,15 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaResponseDto>> exibirTodos() {
-        return ResponseEntity.ok(categoriaService.exibirTodos());
+    public ResponseEntity<Page<CategoriaResponseDto>> exibirTodos(@PageableDefault(sort = {"titulo"}, size = 5) Pageable pageable) {
+        return ResponseEntity.ok(categoriaService.exibirTodos(pageable));
     }
 
     @GetMapping("/{categoriaId}/videos")
-    public ResponseEntity<List<VideoResponseDto>> exibirVideosPorCategoria(@PathVariable Long categoriaId) {
-        return ResponseEntity.ok(videoService.exibirPorIdCategoria(categoriaId));
+    public ResponseEntity<Page<VideoResponseDto>> exibirVideosPorCategoria(@PathVariable Long categoriaId, @PageableDefault(size = 5) Pageable pageable) {
+        return ResponseEntity.ok(videoService.exibirPorIdCategoria(categoriaId, pageable));
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaResponseDto> editar(@PathVariable Long id, @RequestBody CategoriaInputDto input) {
         return ResponseEntity.ok(categoriaService.editar(id, input));

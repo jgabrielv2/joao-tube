@@ -6,6 +6,7 @@ import br.com.joaotube.service.VideoService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,12 +43,12 @@ public class VideoController {
 
     @GetMapping("/")
     public ResponseEntity<Page<VideoResponseDto>> buscarPorTituloContendo(
-            @RequestParam String search, Pageable pageable) {
+            @RequestParam String search, @PageableDefault(size = 5) Pageable pageable) {
             return ResponseEntity.ok(videoService.buscarPorTituloContendo(search, pageable));
     }
 
     @GetMapping
-    public ResponseEntity<Page<VideoResponseDto>> exibirTodos(Pageable pageable) {
+    public ResponseEntity<Page<VideoResponseDto>> exibirTodos(@PageableDefault(size = 5) Pageable pageable) {
         return ResponseEntity.ok(videoService.exibirTodos(pageable));
     }
 
